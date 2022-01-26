@@ -23,12 +23,16 @@ fun getWAVFileDuration(filePath: String): String {
     val mmr = MediaMetadataRetriever()
     try {
         mmr.setDataSource(filePath)
-        duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toString()
+        //返回时长时长(毫秒)
+        mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.let {
+            duration = getFormatDuration(it.toLong())
+        }
     } catch (ex: Exception) {
         LogUtil.i(AudioRecordListFragment.TAG, "duration ${ex.message}")
     } finally {
         mmr.release()
     }
+
     LogUtil.i(AudioRecordFileLocalDataSource.TAG, "duration $duration")
     return duration
 }
@@ -108,4 +112,19 @@ fun getStringTime(timeMillis: Long): String {
     val hour = timeMillis / 1000 / 3600
     return String.format(Locale.CHINA, "%02d:%02d:%02d:%02d", hour, min, second, millis)
 }
+
+/**
+ * @param timeMillis 毫秒
+ */
+fun getFormatDuration(timeMillis: Long, format: String = "%02d:%02d:%02d"): String {
+    LogUtil.i(AudioRecordFragment.TAG, "timeMillis $timeMillis")
+    val millis = timeMillis % 1000 / 10
+    LogUtil.i(AudioRecordFragment.TAG, "millis $millis")
+    val second = timeMillis / 1000 % 60
+    val min = timeMillis / 1000 % 3600 / 60
+    val hour = timeMillis / 1000 / 3600
+    return String.format(Locale.CHINA, format, hour, min, second)
+}
+
+
 

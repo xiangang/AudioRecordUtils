@@ -1,11 +1,14 @@
 package com.nxg.app.audiorecordlist
 
+import android.media.AudioTrack
 import androidx.lifecycle.*
 import com.blankj.utilcode.util.TimeUtils
 import com.nxg.app.R
+import com.nxg.app.audiorecordlist.AudioRecordListFragment.Companion.TAG
 import com.nxg.app.data.AudioRecordFile
 import com.nxg.app.data.source.IAudioRecordFileRepository
 import com.nxg.audiorecord.AudioTrackHandler
+import com.nxg.audiorecord.LogUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,7 +38,18 @@ class AudioRecordListViewModel @Inject constructor(
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
 
-    fun loadTasks(forceUpdate: Boolean) {
+    /**
+     * 用于更新指定Position的item
+     */
+    private val _notifyItemPosition = MutableLiveData<Int>()
+    val notifyItemPosition: LiveData<Int> = _notifyItemPosition
+
+    /**
+     * 当前播放的音频文件对象
+     */
+    private var currentPlayAudioRecordFile: AudioRecordFile? = null
+
+    private fun loadTasks(forceUpdate: Boolean) {
         _forceUpdate.value = forceUpdate
     }
 
@@ -45,6 +59,10 @@ class AudioRecordListViewModel @Inject constructor(
 
     val empty: LiveData<Boolean> = Transformations.map(_items) {
         it.isEmpty()
+    }
+
+    private fun notifyItemChanged(position: Int) {
+        _notifyItemPosition.value = position
     }
 
     private val _noTaskIconRes = MutableLiveData<Int>().apply {
@@ -81,12 +99,58 @@ class AudioRecordListViewModel @Inject constructor(
 
     }
 
+
     /**
      * 播放录音
      */
     fun playAudioRecord(audioRecordFile: AudioRecordFile) {
-        audioRecordFile.play = !audioRecordFile.play
+        LogUtil.i(TAG, "playAudioRecord click audioRecordFile $audioRecordFile")
+        LogUtil.i(TAG, "playAudioRecord current audioRecordFile $currentPlayAudioRecordFile")
+        //播放的不是当前的则停止播放当前
+        currentPlayAudioRecordFile?.let {
+            if (currentPlayAudioRecordFile != audioRecordFile) {
+                LogUtil.i(TAG, "playAudioRecord stop play currentPlayAudioRecordFile}")
+                audioTrackHandler.pause()
+                audioTrackHandler.flush()
+                it.pause()
+                _items.value?.indexOf(it)?.let { it1 -> notifyItemChanged(it1) }
+            }
+        }
+        currentPlayAudioRecordFile = audioRecordFile
+        //播放当前的
+        if (!audioRecordFile.play) {
+            audioTrackHandler.startPlayRecordFile(
+                audioRecordFile.filePath,
+                onPlaybackPositionUpdateListener
+            )
+            audioTrackHandler.play()
+            audioRecordFile.play()
+        } else {
+            //暂停当前的
+            audioTrackHandler.pause()
+            audioRecordFile.pause()
+        }
+        //更新界面
+        _items.value?.indexOf(audioRecordFile)?.let { notifyItemChanged(it) }
     }
+
+    private val onPlaybackPositionUpdateListener =
+        object : AudioTrack.OnPlaybackPositionUpdateListener {
+            override fun onMarkerReached(track: AudioTrack?) {
+                LogUtil.i(TAG, "onMarkerReached")
+                currentPlayAudioRecordFile?.let {
+                    it.pause()
+                    _items.value?.indexOf(it)?.let { it1 -> notifyItemChanged(it1) }
+                }
+                currentPlayAudioRecordFile = null
+                audioTrackHandler.stop()
+                audioTrackHandler.flush()
+            }
+
+            override fun onPeriodicNotification(track: AudioTrack?) {
+                LogUtil.i(TAG, "onPeriodicNotification")
+            }
+        }
 
     /**
      * 录音文件时间

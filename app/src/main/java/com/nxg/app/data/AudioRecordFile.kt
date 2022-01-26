@@ -18,6 +18,15 @@ data class AudioRecordFile constructor(
 ) {
     @Ignore
     var play: Boolean = false
+
+    fun play() {
+        play = true
+    }
+
+    fun pause() {
+        play = false
+    }
+
     fun getIcon(): Int {
         return if (play) {
             R.mipmap.ic_pause
@@ -26,7 +35,7 @@ data class AudioRecordFile constructor(
         }
     }
 
-    override fun equals(other: Any?): Boolean {
+    /*override fun equals(other: Any?): Boolean {
         val o = other as AudioRecordFile
         return id == o.id && play == o.play
     }
@@ -39,5 +48,5 @@ data class AudioRecordFile constructor(
         result = 31 * result + filePath.hashCode()
         result = 31 * result + play.hashCode()
         return result
-    }
+    }*/
 }

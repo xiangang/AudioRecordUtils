@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.nxg.app.R
 import com.nxg.app.AppShareViewModel
@@ -57,6 +58,9 @@ class AudioRecordListFragment : Fragment() {
         setupListAdapter()
         setupRefreshLayout(viewDataBinding.refreshLayout, viewDataBinding.dataList)
         audioRecordListViewModel.refresh()
+        audioRecordListViewModel.notifyItemPosition.observe(viewLifecycleOwner, {
+            notifyItemChanged(it)
+        })
     }
 
     private fun setupListAdapter() {
@@ -67,6 +71,11 @@ class AudioRecordListFragment : Fragment() {
         } else {
             LogUtil.w(TAG, "ViewModel not initialized when attempting to set up adapter.")
         }
+    }
+
+    private fun notifyItemChanged(position: Int) {
+        LogUtil.w(TAG, "notifyItemChanged: position $position.")
+        listAdapter.notifyItemChanged(position)
     }
 
 

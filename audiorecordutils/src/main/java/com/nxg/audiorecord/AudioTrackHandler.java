@@ -201,8 +201,8 @@ public class AudioTrackHandler {
             return;
         }
 
-        int audioLen = sound.length / 2;
         Log.i(TAG, "AudioTrack 开始播放");
+        int audioLen = sound.length / 2;
         audioTrack.setNotificationMarkerPosition(audioLen);
         audioTrack.setPlaybackPositionUpdateListener(new AudioTrack.OnPlaybackPositionUpdateListener() {
             @Override
@@ -231,6 +231,7 @@ public class AudioTrackHandler {
      * 播放，必须先调用start或startPlayRecordFile
      */
     public void play() {
+        Log.i(TAG, "play");
         if (audioTrack != null) {
             audioTrack.play();
         }
@@ -240,6 +241,7 @@ public class AudioTrackHandler {
      * 暂停播放
      */
     public void pause() {
+        Log.i(TAG, "pause");
         if (audioTrack != null) {
             audioTrack.pause();
         }
@@ -249,9 +251,17 @@ public class AudioTrackHandler {
      * 停止播放
      */
     public void stop() {
+        Log.i(TAG, "stop");
         if (audioTrack != null) {
             audioTrack.stop();
             isPlaying = false;
+        }
+    }
+
+    public void flush() {
+        Log.i(TAG, "flush");
+        if (audioTrack != null) {
+            audioTrack.flush();
         }
     }
 
@@ -259,6 +269,7 @@ public class AudioTrackHandler {
      * 释放资源
      */
     public void release() {
+        Log.i(TAG, "release");
         release = true;
         semaphore.release();
         if (audioTrack != null) {

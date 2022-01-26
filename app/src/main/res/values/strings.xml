@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">录音机</string>
+    <string name="action_settings">设置</string>
+    <string name="permissions_tips">此应用是需要录音全才可以正常使用</string>
+    <!-- Content Descriptions -->
+    <string name="no_data_image_content_description">当前无数据</string>
+</resources>

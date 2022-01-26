@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="androidx.core.content.ContextCompat" />
+
+        <variable
+            name="audioRecordFile"
+            type="com.nxg.app.data.AudioRecordFile" />
+
+        <variable
+            name="audioRecordListViewModel"
+            type="com.nxg.app.audiorecordlist.AudioRecordListViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/audio_record_item_height"
+        android:layout_marginStart="@dimen/audio_record_item_margin"
+        android:layout_marginTop="@dimen/audio_record_item_margin"
+        android:layout_marginEnd="@dimen/audio_record_item_margin"
+        android:background="@drawable/shape_audio_record_item"
+        android:onClick="@{() -> audioRecordListViewModel.openAudioRecord(audioRecordFile)}"
+        tools:context=".audiorecord.AudioRecordFragment">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@+id/button_play"
+            app:layout_constraintGuide_percent="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/text_file_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/text_margin"
+            android:layout_marginBottom="4dp"
+            android:text="@{audioRecordFile.fileName}"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:backgroundTint="@null"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="20220125_171553" />
+
+        <TextView
+            android:id="@+id/text_file_create_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/text_margin"
+            android:layout_marginTop="4dp"
+            android:text="@{audioRecordListViewModel.getAudioRecordCreateTime(audioRecordFile.createTime)}"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:backgroundTint="@null"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/guideline"
+            tools:text="2022/01/25" />
+
+        <TextView
+            android:id="@+id/text_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/text_margin"
+            android:text="@{audioRecordFile.duration}"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:backgroundTint="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/button_play"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="00:00:00" />
+
+        <Button
+            android:id="@+id/button_play"
+            android:layout_width="@dimen/audio_record_button_size"
+            android:layout_height="@dimen/audio_record_button_size"
+            android:layout_marginEnd="@dimen/text_margin"
+            android:background="@{ContextCompat.getDrawable(context, audioRecordFile.getIcon())}"
+            android:onClick="@{() -> audioRecordListViewModel.playAudioRecord(audioRecordFile)}"
+            app:backgroundTint="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

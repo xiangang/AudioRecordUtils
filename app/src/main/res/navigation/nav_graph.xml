@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/permissionsFragment">
+
+    <fragment
+        android:id="@+id/permissionsFragment"
+        android:name="com.nxg.app.permissions.PermissionsFragment"
+        android:label="PermissionsFragment">
+        <action
+            android:id="@+id/action_permissionsFragment_to_audioRecordFragment"
+            app:destination="@id/audioRecordFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/audioRecordListFragment"
+        android:name="com.nxg.app.audiorecordlist.AudioRecordListFragment"
+        android:label="main_fragment"
+        tools:layout="@layout/audio_record_list_fragment">
+        <action
+            android:id="@+id/action_mainFragment_to_audioRecordFragment"
+            app:destination="@id/audioRecordFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_permissionsFragment"
+            app:destination="@id/permissionsFragment" />
+
+        <argument
+            android:name="audioRecordFileId"
+            android:defaultValue="0"
+            app:argType="integer" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/audioRecordFragment"
+        android:name="com.nxg.app.audiorecord.AudioRecordFragment"
+        android:label="audio_record_fragment"
+        tools:layout="@layout/audio_record_fragment" />
+
+</navigation>

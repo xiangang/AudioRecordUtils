@@ -41,7 +41,9 @@ interface IAudioRecordFileDataSource {
 
     suspend fun findAudioRecordFileListWithFileName(search: String): Result<List<AudioRecordFile>>
 
-    suspend fun saveAudioRecordFile(audioRecordFile: AudioRecordFile)
+    suspend fun insertAudioRecordFile(audioRecordFile: AudioRecordFile): Long
+
+    suspend fun updateAudioRecordFile(audioRecordFile: AudioRecordFile): Int
 
     suspend fun insertAudioRecordFileList(audioRecordFileList: List<AudioRecordFile>)
 

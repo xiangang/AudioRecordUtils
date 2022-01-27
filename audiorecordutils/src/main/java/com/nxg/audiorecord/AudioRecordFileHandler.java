@@ -121,16 +121,27 @@ public class AudioRecordFileHandler {
 
     }
 
-    public void pcmToWave(long sampleRateInHz) {
+    /**
+     * PCM转WAV
+     *
+     * @param sampleRateInHz 采样率
+     */
+    public void syncPcmToWave(long sampleRateInHz) {
+        if (mPcmFile != null && mWavFile != null) {
+            syncPcmToWave(mPcmFile.getAbsolutePath(), mWavFile.getAbsolutePath(), sampleRateInHz);
+        }
+    }
+
+    public void asyncPcmToWave(long sampleRateInHz) {
         if (mPcmFile != null && mWavFile != null) {
             new Thread(Thread.currentThread().getThreadGroup(),
-                    () -> pcmToWave(mPcmFile.getAbsolutePath(), mWavFile.getAbsolutePath(), sampleRateInHz),
+                    () -> syncPcmToWave(mPcmFile.getAbsolutePath(), mWavFile.getAbsolutePath(), sampleRateInHz),
                     "Thread-PCM2WAV"
             ).start();
         }
     }
 
-    private void pcmToWave(String inFileName, String outFileName, long sampleRateInHz) {
+    private void syncPcmToWave(String inFileName, String outFileName, long sampleRateInHz) {
         LogUtil.i(TAG, "pcm转wav文件，" + inFileName + " ---> " + outFileName);
         FileInputStream in;
         FileOutputStream out;

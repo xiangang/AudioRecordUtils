@@ -6,30 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.navigation.fragment.navArgs
-import com.nxg.app.R
-import com.nxg.app.AppShareViewModel
-import com.nxg.app.audiorecord.AudioRecordFragment
+import androidx.lifecycle.lifecycleScope
 import com.nxg.app.databinding.AudioRecordListFragmentBinding
 import com.nxg.app.utils.setupRefreshLayout
-import com.nxg.audiorecord.AudioRecordHandler
 import com.nxg.audiorecord.LogUtil
-import com.nxg.mvvm.applicationViewModels
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AudioRecordListFragment : Fragment() {
 
     companion object {
-        const val TAG = "MainFragment"
+        const val TAG = "AudioRecordList"
         fun newInstance() = AudioRecordListFragment()
     }
-
-    private val args: AudioRecordListFragmentArgs by navArgs()
-
-    private val appShareViewModel: AppShareViewModel by applicationViewModels()
 
     private val audioRecordListViewModel: AudioRecordListViewModel by viewModels()
 
@@ -37,18 +28,14 @@ class AudioRecordListFragment : Fragment() {
 
     private lateinit var listAdapter: AudioRecordListAdapter
 
-    @Inject
-    lateinit var audioRecordHandler: AudioRecordHandler
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        LogUtil.w(TAG, "onCreateView")
         viewDataBinding = AudioRecordListFragmentBinding.inflate(inflater, container, false).apply {
             viewmodel = audioRecordListViewModel
         }
-        LogUtil.i(AudioRecordFragment.TAG, "audioRecordHandler $audioRecordHandler")
-        audioRecordHandler.stop()
         return viewDataBinding.root
     }
 
@@ -57,10 +44,10 @@ class AudioRecordListFragment : Fragment() {
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
         setupListAdapter()
         setupRefreshLayout(viewDataBinding.refreshLayout, viewDataBinding.dataList)
-        audioRecordListViewModel.refresh()
         audioRecordListViewModel.notifyItemPosition.observe(viewLifecycleOwner, {
             notifyItemChanged(it)
         })
+        audioRecordListViewModel.refresh()
     }
 
     private fun setupListAdapter() {
@@ -71,10 +58,16 @@ class AudioRecordListFragment : Fragment() {
         } else {
             LogUtil.w(TAG, "ViewModel not initialized when attempting to set up adapter.")
         }
+
+        lifecycleScope.launch {
+            delay(200)
+            viewDataBinding.dataList.scrollToPosition(0)
+            listAdapter.notifyItemRangeChanged(0, 10)
+        }
     }
 
     private fun notifyItemChanged(position: Int) {
-        LogUtil.w(TAG, "notifyItemChanged: position $position.")
+        LogUtil.w(TAG, "notifyItemChanged: position $position")
         listAdapter.notifyItemChanged(position)
     }
 

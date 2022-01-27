@@ -2,6 +2,7 @@ package com.nxg.app.di
 
 import android.content.Context
 import androidx.room.Room
+import com.nxg.app.audiorecord.AudioRecordHandlerLifecycleObserver
 import com.nxg.app.data.source.IAudioRecordDocDataSource
 import com.nxg.app.data.source.AudioRecordFileRepository
 import com.nxg.app.data.source.IAudioRecordFileDataSource
@@ -148,4 +149,12 @@ object AudioRecordModule {
     ): AudioTrackHandler {
         return AudioTrackHandler.Builder().build()
     }
+
+    /*@Provides
+    fun provideAudioRecordHandlerLifecycleObserver(
+        @ApplicationContext context: Context
+        // Potential dependencies of this type
+    ): AudioRecordHandlerLifecycleObserver {
+        return AudioRecordHandlerLifecycleObserver()
+    }*/
 }

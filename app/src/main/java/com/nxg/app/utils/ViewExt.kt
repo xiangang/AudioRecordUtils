@@ -70,9 +70,9 @@ fun Fragment.setupRefreshLayout(
     scrollUpChild: View? = null
 ) {
     refreshLayout.setColorSchemeColors(
-        ContextCompat.getColor(requireActivity(), R.color.purple_200),
-        ContextCompat.getColor(requireActivity(), R.color.purple_500),
-        ContextCompat.getColor(requireActivity(), R.color.purple_700)
+        ContextCompat.getColor(requireActivity(), R.color.green),
+        ContextCompat.getColor(requireActivity(), R.color.green),
+        ContextCompat.getColor(requireActivity(), R.color.green)
     )
     // Set the scrolling view in the custom SwipeRefreshLayout.
     scrollUpChild?.let {

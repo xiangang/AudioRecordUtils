@@ -10,16 +10,15 @@
         android:id="@+id/waveView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.3"
-        app:wvCenterLineColor="@color/purple_500"
+        app:wvCenterLineColor="@color/teal_700"
         app:wvCenterLineWidth="1px"
-        app:wvLineColor="@color/purple_700"
+        app:wvLineColor="@color/green"
         app:wvLineSpace="1px"
         app:wvLineWidth="1px" />
 

@@ -30,6 +30,7 @@ class AudioRecordListViewModel @Inject constructor(
                 _dataLoading.value = false
             }
         }
+        LogUtil.i(TAG, "observeAudioRecordFileList ")
         audioRecordFileRepository.observeAudioRecordFileList().distinctUntilChanged()
             .switchMap { handleAudioRecordFileList(it) }
     }
@@ -81,6 +82,7 @@ class AudioRecordListViewModel @Inject constructor(
             viewModelScope.launch {
                 result.value = audioRecordFileListResult.getOrDefault(emptyList())
             }
+            LogUtil.i(TAG, "handleAudioRecordFileList size ${result.value?.size}")
         } else {
             result.value = emptyList()
         }
@@ -88,6 +90,7 @@ class AudioRecordListViewModel @Inject constructor(
     }
 
     init {
+        //只有第一次才会读取本地文件
         loadTasks(true)
         audioTrackHandler.prepare()
     }
@@ -103,7 +106,8 @@ class AudioRecordListViewModel @Inject constructor(
     /**
      * 播放录音
      */
-    fun playAudioRecord(audioRecordFile: AudioRecordFile) {
+    fun playAudioRecord(position: Int, audioRecordFile: AudioRecordFile) {
+        LogUtil.i(TAG, "playAudioRecord click _items size  ${_items.value?.size}")
         LogUtil.i(TAG, "playAudioRecord click audioRecordFile $audioRecordFile")
         LogUtil.i(TAG, "playAudioRecord current audioRecordFile $currentPlayAudioRecordFile")
         //播放的不是当前的则停止播放当前
@@ -131,7 +135,11 @@ class AudioRecordListViewModel @Inject constructor(
             audioRecordFile.pause()
         }
         //更新界面
-        _items.value?.indexOf(audioRecordFile)?.let { notifyItemChanged(it) }
+        LogUtil.i(TAG, "playAudioRecord position $position")
+        audioRecordFile.let {
+            _items.value?.indexOf(it)?.let { it1 -> notifyItemChanged(it1) }
+        }
+        notifyItemChanged(position)
     }
 
     private val onPlaybackPositionUpdateListener =

@@ -5,10 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.nxg.app.audiorecordlist.AudioRecordListFragment.Companion.TAG
 import com.nxg.app.data.AudioRecordFile
 import com.nxg.app.databinding.AudioRecordListItemBinding
-import com.nxg.audiorecord.LogUtil
 
 
 /**
@@ -31,8 +29,9 @@ class AudioRecordListAdapter(private val viewModel: AudioRecordListViewModel) :
 
         fun bind(viewModel: AudioRecordListViewModel, item: AudioRecordFile) {
 
-            binding.audioRecordListViewModel = viewModel
+            binding.position = layoutPosition
             binding.audioRecordFile = item
+            binding.audioRecordListViewModel = viewModel
             binding.executePendingBindings()
         }
 
@@ -55,12 +54,12 @@ class AudioRecordListAdapter(private val viewModel: AudioRecordListViewModel) :
  */
 class AudioRecordListDiffCallback : DiffUtil.ItemCallback<AudioRecordFile>() {
     override fun areItemsTheSame(oldItem: AudioRecordFile, newItem: AudioRecordFile): Boolean {
-        LogUtil.i(TAG, "areItemsTheSame ${oldItem.id == newItem.id}")
+        //LogUtil.i(TAG, "areItemsTheSame ${oldItem.id == newItem.id}")
         return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: AudioRecordFile, newItem: AudioRecordFile): Boolean {
-        LogUtil.i(TAG, "areContentsTheSame ${oldItem == newItem}")
+        //LogUtil.i(TAG, "areContentsTheSame ${oldItem == newItem}")
         return oldItem == newItem
     }
 }

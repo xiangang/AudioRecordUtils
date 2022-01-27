@@ -37,7 +37,11 @@ class AudioRecordFileRemoteDataSource @Inject constructor(context: Context) :
         TODO("Not yet implemented")
     }
 
-    override suspend fun saveAudioRecordFile(audioRecordFile: AudioRecordFile) {
+    override suspend fun insertAudioRecordFile(audioRecordFile: AudioRecordFile): Long {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateAudioRecordFile(audioRecordFile: AudioRecordFile): Int {
         TODO("Not yet implemented")
     }
 

@@ -61,16 +61,8 @@ interface AudioRecordFileDao {
      *
      * @param audioRecordFile the AudioRecordFile to be inserted.
      */
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAudioRecordFile(audioRecordFile: AudioRecordFile)
-
-    /**
-     * Insert a AudioRecordFile List in the database. If the AudioRecordFile already exists, replace it.
-     *
-     * @param audioRecordFileList the AudioRecordFile List to be inserted.
-     */
     @Insert
-    suspend fun insertAudioRecordFileList(audioRecordFileList: List<AudioRecordFile>)
+    suspend fun insertAudioRecordFile(audioRecordFile: AudioRecordFile): Long
 
     /**
      * Update a AudioRecordFile.
@@ -80,6 +72,14 @@ interface AudioRecordFileDao {
      */
     @Update
     suspend fun updateAudioRecordFile(audioRecordFile: AudioRecordFile): Int
+
+    /**
+     * Insert a AudioRecordFile List in the database. If the AudioRecordFile already exists, replace it.
+     *
+     * @param audioRecordFileList the AudioRecordFile List to be inserted.
+     */
+    @Insert
+    suspend fun insertAudioRecordFileList(audioRecordFileList: List<AudioRecordFile>)
 
     /**
      * Delete a AudioRecordFile by id.

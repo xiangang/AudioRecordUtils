@@ -10,7 +10,7 @@ import com.nxg.app.R
 @Entity(tableName = "AudioRecordFile")
 data class AudioRecordFile constructor(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id") var id: Int,
+    @ColumnInfo(name = "id") var id: Long,
     @NonNull @ColumnInfo(name = "createTime") var createTime: Long,
     @NonNull @ColumnInfo(name = "duration") var duration: String,
     @NonNull @ColumnInfo(name = "fileName") var fileName: String,
@@ -38,15 +38,6 @@ data class AudioRecordFile constructor(
     /*override fun equals(other: Any?): Boolean {
         val o = other as AudioRecordFile
         return id == o.id && play == o.play
-    }
-
-    override fun hashCode(): Int {
-        var result = id
-        result = 31 * result + createTime.hashCode()
-        result = 31 * result + duration.hashCode()
-        result = 31 * result + fileName.hashCode()
-        result = 31 * result + filePath.hashCode()
-        result = 31 * result + play.hashCode()
-        return result
     }*/
+
 }

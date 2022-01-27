@@ -22,8 +22,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    companion object{
-        const val TAG ="MainActivity"
+    companion object {
+        const val TAG = "MainActivity"
     }
 
     private lateinit var binding: MainActivityBinding
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
         binding.toolbarLayout.title = getString(R.string.app_name)
 
-        LogUtil.i(TAG,"audioRecordHandler $audioRecordHandler")
+        LogUtil.i(TAG, "audioRecordHandler $audioRecordHandler")
 
         /**
          * 使用 FragmentContainerView 创建 NavHostFragment，或通过 FragmentTransaction 手动将 NavHostFragment 添加到您的 activity 时，
@@ -86,6 +86,7 @@ class MainActivity : AppCompatActivity() {
                             //binding.toolbar.setCollapsible(true)
                             delay(200)
                             binding.toolbar.navigationIcon = null
+                            binding.nestedScrollView.fullScroll(View.FOCUS_UP)
                         }
                         AppShareViewModel.UiState.START -> {
                             binding.toolbar.setNavigationIcon(R.drawable.ic_arrow_back_24_white)

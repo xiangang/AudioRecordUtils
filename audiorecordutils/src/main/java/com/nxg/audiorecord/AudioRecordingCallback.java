@@ -5,6 +5,15 @@ package com.nxg.audiorecord;
  * 一般可用于生成录音文件，语音聊天，推流直播
  */
 public interface AudioRecordingCallback {
+
+    /**
+     * 录音开始的回调
+     *
+     * @param pcmFilePath 录音PCM文件存储的路径
+     * @param wavFilePath 录音WAV文件存储的路径
+     */
+    void onStart(String pcmFilePath, String wavFilePath);
+
     /**
      * 录音数据获取回调
      *

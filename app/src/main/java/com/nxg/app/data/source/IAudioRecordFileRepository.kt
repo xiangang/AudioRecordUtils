@@ -15,13 +15,21 @@ interface IAudioRecordFileRepository {
 
     fun observeAudioRecordFile(AudioRecordFileId: String): LiveData<Result<AudioRecordFile>>
 
-    suspend fun getAudioRecordFile(AudioRecordFileId: String, forceUpdate: Boolean = false): Result<AudioRecordFile>
+    suspend fun getAudioRecordFile(
+        AudioRecordFileId: String,
+        forceUpdate: Boolean = false
+    ): Result<AudioRecordFile>
 
-    suspend fun getAudioRecordByFilePath(filePath: String, forceUpdate: Boolean = false): Result<AudioRecordFile>
+    suspend fun getAudioRecordByFilePath(
+        filePath: String,
+        forceUpdate: Boolean = false
+    ): Result<AudioRecordFile>
 
     suspend fun findAudioRecordFileListWithFileName(search: String): Result<List<AudioRecordFile>>
 
-    suspend fun saveAudioRecordFile(audioRecordFile: AudioRecordFile)
+    suspend fun insertAudioRecordFile(audioRecordFile: AudioRecordFile): Long
+
+    suspend fun updateAudioRecordFile(audioRecordFile: AudioRecordFile): Int
 
     suspend fun insertAudioRecordFileList(audioRecordList: List<AudioRecordFile>)
 

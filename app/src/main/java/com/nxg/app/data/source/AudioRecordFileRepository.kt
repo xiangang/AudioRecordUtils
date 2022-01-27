@@ -30,7 +30,7 @@ class AudioRecordFileRepository constructor(
                 val toSaveAudioRecordFileList = mutableListOf<AudioRecordFile>()
                 for (file in allFiles) {
                     getAudioRecordByFilePath(file.absolutePath).let { result ->
-                        LogUtil.i(TAG,"getOrNull ${result.getOrNull()}")
+                        //LogUtil.i(TAG, "getOrNull ${result.getOrNull()}")
                         if (result.isFailure) {
                             toSaveAudioRecordFileList.add(
                                 AudioRecordFile(
@@ -104,12 +104,12 @@ class AudioRecordFileRepository constructor(
         audioRecordLocalDataSource.insertAudioRecordFileList(audioRecordList)
     }
 
-    override suspend fun saveAudioRecordFile(audioRecordFile: AudioRecordFile) {
-        coroutineScope {
-            launch { audioRecordLocalDataSource.saveAudioRecordFile(audioRecordFile) }
-            //TODO 支持云端同步
-            //launch { audioRecordRemoteDataSource.saveAudioRecordFile(AudioRecordFile) }
-        }
+    override suspend fun insertAudioRecordFile(audioRecordFile: AudioRecordFile): Long {
+        return audioRecordLocalDataSource.insertAudioRecordFile(audioRecordFile)
+    }
+
+    override suspend fun updateAudioRecordFile(audioRecordFile: AudioRecordFile): Int {
+        return audioRecordLocalDataSource.updateAudioRecordFile(audioRecordFile)
     }
 
     override suspend fun deleteAllAudioRecordFileList() {

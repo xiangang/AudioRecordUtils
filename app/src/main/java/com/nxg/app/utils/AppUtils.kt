@@ -19,7 +19,7 @@ import java.util.Arrays
  * 通过MediaMetadataRetriever读取WAV文件的音频时长
  */
 fun getWAVFileDuration(filePath: String): String {
-    var duration = "00:00"
+    var duration = "00:00:00"
     val mmr = MediaMetadataRetriever()
     try {
         mmr.setDataSource(filePath)
@@ -82,13 +82,12 @@ fun getAllLocalWAVFileFromDir(
     val files = File(
         dir
     ).listFiles { pathname ->
-
-        LogUtil.i("AppUtils", "getAllLocalWAVFileFromDir pathname $pathname")
+        //LogUtil.i("AppUtils", "getAllLocalWAVFileFromDir pathname $pathname")
         pathname.isFile && pathname.name.endsWith(suffix)
     }
-    LogUtil.i("AppUtils", "getAllLocalWAVFileFromDir dir $dir")
-    LogUtil.i("AppUtils", "getAllLocalWAVFileFromDir suffix $suffix")
-    LogUtil.i("AppUtils", "getAllLocalWAVFileFromDir files $files")
+    //LogUtil.i("AppUtils", "getAllLocalWAVFileFromDir dir $dir")
+    //LogUtil.i("AppUtils", "getAllLocalWAVFileFromDir suffix $suffix")
+    //LogUtil.i("AppUtils", "getAllLocalWAVFileFromDir files $files")
     //按日期倒序，数据库查询时按照时间倒序查询就行了
     /*files?.let {
         Arrays.sort(it, Comparator<File> { f1, f2 ->
@@ -104,9 +103,9 @@ fun getAllLocalWAVFileFromDir(
  * @param timeMillis 毫秒
  */
 fun getStringTime(timeMillis: Long): String {
-    LogUtil.i(AudioRecordFragment.TAG, "timeMillis $timeMillis")
+    //LogUtil.i(AudioRecordFragment.TAG, "timeMillis $timeMillis")
     val millis = timeMillis % 1000 / 10
-    LogUtil.i(AudioRecordFragment.TAG, "millis $millis")
+    //LogUtil.i(AudioRecordFragment.TAG, "millis $millis")
     val second = timeMillis / 1000 % 60
     val min = timeMillis / 1000 % 3600 / 60
     val hour = timeMillis / 1000 / 3600
@@ -117,9 +116,9 @@ fun getStringTime(timeMillis: Long): String {
  * @param timeMillis 毫秒
  */
 fun getFormatDuration(timeMillis: Long, format: String = "%02d:%02d:%02d"): String {
-    LogUtil.i(AudioRecordFragment.TAG, "timeMillis $timeMillis")
+    //LogUtil.i(AudioRecordFragment.TAG, "timeMillis $timeMillis")
     val millis = timeMillis % 1000 / 10
-    LogUtil.i(AudioRecordFragment.TAG, "millis $millis")
+    //LogUtil.i(AudioRecordFragment.TAG, "millis $millis")
     val second = timeMillis / 1000 % 60
     val min = timeMillis / 1000 % 3600 / 60
     val hour = timeMillis / 1000 / 3600

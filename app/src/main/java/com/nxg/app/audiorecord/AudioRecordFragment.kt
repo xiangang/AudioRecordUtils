@@ -12,6 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.nxg.app.AppShareViewModel
 import com.nxg.app.R
+import com.nxg.app.WAV
 import com.nxg.app.databinding.AudioRecordFragmentBinding
 import com.nxg.audiorecord.AudioRecordHandler
 import com.nxg.audiorecord.AudioRecordingCallback
@@ -40,6 +41,9 @@ class AudioRecordFragment : Fragment() {
     @Inject
     lateinit var audioRecordHandler: AudioRecordHandler
 
+    @Inject
+    lateinit var audioRecordHandlerLifecycleObserver: AudioRecordHandlerLifecycleObserver
+
     private var _binding: AudioRecordFragmentBinding? = null
 
     // This property is only valid between onCreateView and
@@ -51,13 +55,28 @@ class AudioRecordFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = AudioRecordFragmentBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val navController = findNavController()
         val waveView = binding.waveView
         LogUtil.i(TAG, "audioRecordHandler $audioRecordHandler")
         LogUtil.i(TAG, "audioRecordViewModel $audioRecordViewModel")
-        audioRecordHandler.start()
+        LogUtil.i(TAG, "audioRecordHandlerLifecycleObserver $audioRecordHandlerLifecycleObserver")
+        lifecycle.addObserver(audioRecordHandlerLifecycleObserver)
         audioRecordHandler.setAudioRecordingCallback(object : AudioRecordingCallback {
+            override fun onStart(pcmFilePath: String?, wavFilePath: String?) {
+                wavFilePath?.let {
+                    audioRecordViewModel.createAudioRecordFile(
+                        System.currentTimeMillis(),
+                        it.substring(0, it.indexOf(WAV)),
+                        it
+                    )
+                }
+            }
+
             override fun onRecording(audioData: ByteArray?, length: Int, volume: Int) {
                 lifecycleScope.launch {
                     if (!audioRecordHandler.isPause) {
@@ -68,6 +87,13 @@ class AudioRecordFragment : Fragment() {
 
             override fun onStop(pcmFilePath: String?, wavFilePath: String?) {
                 lifecycleScope.launch {
+                    //TODO show dialog
+                    wavFilePath?.let {
+                        audioRecordViewModel.updateAudioRecordFile(
+                            it
+                        )
+                    }
+                    //TODO dismiss dialog
                     appShareViewModel.setUiState(AppShareViewModel.UiState.HOME)
                     navController.popBackStack()
                 }
@@ -102,13 +128,11 @@ class AudioRecordFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 audioRecordViewModel.tickFlow.collect {
-                    LogUtil.i(TAG, "time $it")
                     binding.textTime.text = it
                 }
             }
         }
         audioRecordViewModel.start()
-        return root
     }
 
 }

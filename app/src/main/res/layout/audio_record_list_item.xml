@@ -13,6 +13,11 @@
             name="audioRecordFile"
             type="com.nxg.app.data.AudioRecordFile" />
 
+
+        <variable
+            name="position"
+            type="Integer" />
+
         <variable
             name="audioRecordListViewModel"
             type="com.nxg.app.audiorecordlist.AudioRecordListViewModel" />
@@ -85,7 +90,7 @@
             android:layout_height="@dimen/audio_record_button_size"
             android:layout_marginEnd="@dimen/audio_record_item_margin"
             android:background="@{ContextCompat.getDrawable(context, audioRecordFile.getIcon())}"
-            android:onClick="@{() -> audioRecordListViewModel.playAudioRecord(audioRecordFile)}"
+            android:onClick="@{() -> audioRecordListViewModel.playAudioRecord(position,audioRecordFile)}"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

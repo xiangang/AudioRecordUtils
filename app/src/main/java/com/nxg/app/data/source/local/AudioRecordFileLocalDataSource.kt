@@ -89,9 +89,14 @@ class AudioRecordFileLocalDataSource @Inject constructor(
             audioRecordFileDao.insertAudioRecordFileList(audioRecordFileList)
         }
 
-    override suspend fun saveAudioRecordFile(audioRecordFile: AudioRecordFile) =
+    override suspend fun insertAudioRecordFile(audioRecordFile: AudioRecordFile): Long =
         withContext(ioDispatcher) {
             audioRecordFileDao.insertAudioRecordFile(audioRecordFile)
+        }
+
+    override suspend fun updateAudioRecordFile(audioRecordFile: AudioRecordFile): Int =
+        withContext(ioDispatcher) {
+            audioRecordFileDao.updateAudioRecordFile(audioRecordFile)
         }
 
     override suspend fun deleteAllAudioRecordFileList() =

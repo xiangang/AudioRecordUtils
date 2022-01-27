@@ -8,6 +8,8 @@ import android.media.MediaRecorder;
 import android.os.Environment;
 import android.text.TextUtils;
 
+import java.util.Arrays;
+
 /**
  * AudioRecord工具类
  */
@@ -139,22 +141,25 @@ public class AudioRecordHandler implements IAudioRecordHandle {
             LogUtil.i(TAG, "audioRecord = " + audioRecord);
             LogUtil.i(TAG, "sizeInBytes.length = " + sizeInBytes);
             LogUtil.i(TAG, "Thread.currentThread().isInterrupted() = " + Thread.currentThread().isInterrupted());
+            if (audioRecordingCallback != null) {
+                audioRecordingCallback.onStart(pcmFilePath, pcmFilePath.replace(AudioRecordFileHandler.PCM, AudioRecordFileHandler.WAV));
+            }
             //开始录制，死循环
             while (isRecording() && !Thread.currentThread().isInterrupted()) {
-                LogUtil.i(TAG, "audioRecord.getState() = " + audioRecord.getState());
-                LogUtil.i(TAG, "audioRecord.getRecordingState() = " + audioRecord.getRecordingState());
-                LogUtil.i(TAG, "audioData.length = " + audioData.length);
+                //LogUtil.i(TAG, "audioRecord.getState() = " + audioRecord.getState());
+                //LogUtil.i(TAG, "audioRecord.getRecordingState() = " + audioRecord.getRecordingState());
+                //LogUtil.i(TAG, "audioData.length = " + audioData.length);
                 //读取录音数据到audioData中
                 int audioDataLength = audioRecord.read(audioData, offsetInBytes, sizeInBytes);
                 //如果读取的数据长度和sizeInBytes不一致则录音失败，结束录音(按照文档的说法，audioDataResult不能大于sizeInBytes)
-                LogUtil.i(TAG, "audioDataLength = " + audioDataLength);
-                LogUtil.i(TAG, "sizeInBytes = " + sizeInBytes);
+                //LogUtil.i(TAG, "audioDataLength = " + audioDataLength);
+                //LogUtil.i(TAG, "sizeInBytes = " + sizeInBytes);
                 if (audioDataLength != sizeInBytes) {
                     LogUtil.e(TAG, "录音失败或结束!");
                     break;
                 }
                 //配置生成录音文件并且未暂停写入
-                LogUtil.i(TAG, "isWriting() = " + isPause());
+                //LogUtil.i(TAG, "isWriting() = " + isPause());
                 if (!isPause()) {
                     //对获取到的音频数据进行分组处理
                     int offset = audioDataLength % maxSegmentDataLength > 0 ? 1 : 0;
@@ -166,13 +171,13 @@ public class AudioRecordHandler implements IAudioRecordHandle {
                         //复制音频数据到frameBuffer
                         System.arraycopy(audioData, i * maxSegmentDataLength, segmentAudioData, 0, length);
                         //写入录音文件
-                        LogUtil.i(TAG, "audioData write = " + segmentAudioData);
+                        //LogUtil.i(TAG, "audioData write = " + Arrays.toString(segmentAudioData));
                         AudioRecordFileHandler.getInstance().write(segmentAudioData);
                     }
                 }
                 //音频数据回调
                 int volume = (int) AudioRecordFileHandler.getInstance().calculateVolume(audioData);
-                LogUtil.i(TAG, "audioData volume = " + volume);
+                //LogUtil.i(TAG, "audioData volume = " + volume);
                 //将数据回调出去
                 if (audioRecordingCallback != null) {
                     audioRecordingCallback.onRecording(audioData, audioDataLength, volume);
@@ -190,7 +195,7 @@ public class AudioRecordHandler implements IAudioRecordHandle {
             }
             //循环结束，生成wav文件
             if (audioRecord != null) {
-                AudioRecordFileHandler.getInstance().pcmToWave(audioRecord.getSampleRate());
+                AudioRecordFileHandler.getInstance().syncPcmToWave(audioRecord.getSampleRate());
             }
             //回调录音结束
             if (audioRecordingCallback != null) {
